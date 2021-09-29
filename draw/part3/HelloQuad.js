@@ -3,7 +3,6 @@ const VSHADER_SOURCE =
   'attribute vec4 a_Position; \n' + 
   'void main() {\n' +
   '  gl_Position = a_Position;\n' + // Set the vertex coordinates of the point
-  '  gl_PointSize = 10.0;\n' +                    // Set the point size
   '}\n';
 
 // 片元着色器
@@ -43,14 +42,21 @@ function main() {
     // 清空canvas
     gl.clear(gl.COLOR_BUFFER_BIT);
     // 绘制三个点
-    gl.drawArrays(gl.POINTS, 0, n);
+    // gl.drawArrays(gl.POINTS, 0, n);
+    // gl.drawArrays(gl.LINES, 0, n);
+    // gl.drawArrays(gl.LINE_STRIP, 0, n);
+    // gl.drawArrays(gl.LINE_LOOP, 0, n);
+    // 和LINE_LOOP的区别是，一个是三角形线，一个是三角形面
+    // gl.drawArrays(gl.TRIANGLES, 0, n);
+    // gl.drawArrays(gl.TRIANGLES, 0, n);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
 }
 
 function initVertexBuffers(gl) {
     const vertices = new Float32Array([
-        0.0, 0.5, -0.5, -0.5, 0.5, -0.5
+        -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5
     ])
-    const n = 3;
+    const n = 4;
     const vertexBuffer = gl.createBuffer();
     if(!vertexBuffer) {
         console.log('创建失败');
