@@ -6,6 +6,7 @@ const VSHADER_SOURCE =
   '}\n';
 
 // 片元着色器
+// gl_FragCoord 指的是canvas中的坐标系，因此要除以canvas的高度和宽度，将其归一化到【0-1】的GL坐标系中
 const FSHADER_SOURCE =
   'precision mediump float;\n' +
   'uniform float u_Width;\n' +
