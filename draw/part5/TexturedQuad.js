@@ -1,7 +1,7 @@
 // 顶点着色器
 const VSHADER_SOURCE = 
   'attribute vec4 a_Position; \n' + 
-  'attribute vec2 a_TexCoord; \n' + 
+  'attribute vec2 a_TexCoord; \n' + // 纹理坐标
   'varying vec2 v_TexCoord; \n' + 
   'void main() {\n' +
   '  gl_Position = a_Position;\n' + // Set the vertex coordinates of the point
@@ -17,7 +17,7 @@ const FSHADER_SOURCE =
   'uniform sampler2D u_Sampler;\n' +
   'varying vec2 v_TexCoord; \n' + 
   'void main() {\n' +
-  '  gl_FragColor = texture2D(u_Sampler, v_TexCoord);\n' + // Set the point color
+  '  gl_FragColor = texture2D(u_Sampler, v_TexCoord);\n' + // 片元着色器从纹理上获取纹素的颜色
   '}\n';
 
 function main() {
@@ -80,6 +80,14 @@ function initVertexBuffers(gl) {
         console.log('失败了获取local storage');
     }
     // 将缓冲区分配给变量
+    /**
+     * @params a_Position 顶点属性，该属性要被修改的索引
+     * @params 2 每个顶点属性组件的数量
+     * @params FLOAT 数组中每个组件的数据类型
+     * @params false 是否整数数据值应当被float时被归一化到一定的范围
+     * @params FSIZE * 4 连续顶点属性的开始之间的字节指定偏移量
+     * @params FSIZE * 2 顶点属性阵列中的第一组分的字节指定偏移
+     */
     gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FSIZE * 4, 0);
     // 连接a_Position变量与分配的缓冲区，处理缓冲区对象
     gl.enableVertexAttribArray(a_Position);
@@ -121,13 +129,15 @@ function loadTexture(gl, n, texture, u_Sampler, image) {
     // 激活纹理
     gl.activeTexture(gl.TEXTURE0);
     // 绑定纹理
+    // TEXTURE_2D：二维纹理
+    // TEXTURE_CUBE_MAP：立方体纹理
     gl.bindTexture(gl.TEXTURE_2D, texture);
 
     // 设置纹理参数
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    // 设置纹理图像
+    // 设置纹理图像，将图像传输给纹理对象
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
-
+    // 将0号纹理传递给着色器中的取样器变量
     gl.uniform1i(u_Sampler, 0);
     // Clear <canvas>
     gl.clear(gl.COLOR_BUFFER_BIT); 
